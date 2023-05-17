@@ -18,6 +18,7 @@ class ShawarmaStore:
     self.chicken_queue = []
     self.beef_queue = []
     self.agenda = []
+    self.clock  = 0
     self.customer_count         = 0 
     self.total_waiting_time     = 0
     self.chicken_storage_time     = 0
