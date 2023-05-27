@@ -20,6 +20,7 @@ class ShawarmaStore:
     self.agenda = []
     self.clock  = 0
     self.customer_count         = 0 
+    self.served_customer_count         = 0 
     self.total_waiting_time     = 0
     self.chicken_storage_time     = 0
     self.beef_storage_time     = 0
@@ -46,9 +47,13 @@ class Employee:
     self.is_free = True
     self.freed_time = 0
     self.free_time = 0
+  def free_employee(self,clock):
+      self.is_free = True
+      self.freed_time = clock
+    
     
 import random
-import np
+import numpy as np
 class RandomGenerator:
     
     def normal(self, mean, std_deviation):

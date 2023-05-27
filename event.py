@@ -16,7 +16,7 @@ class Event:
         shawarmaStore.clock = self.activation_time
         slicingEvent  = Event("slicing", shawarmaStore.clock+shawarmaStore.slicingPeriod)
         shawarmaStore.agenda.append(slicingEvent)
-        print("################################# - slicing event has been scheduled at "+str(slicingEvent.activation_time)+"- #########################################\n") 
+     #   print("################################# - slicing event has been scheduled at "+str(slicingEvent.activation_time)+"- #########################################\n") 
         # Slicing Event Execution       
         for chickenStand in shawarmaStore.chicken_meat_stands:
           # Checking the cummulated quantity on all chicken stands
@@ -27,9 +27,9 @@ class Event:
               slicedQuantity=0.1
             chickenStand.storage_time+=chickenStand.current_quantity*shawarmaStore.slicingPeriod           # sum of (quantity before adding the sliced portion * T)
             chickenStand.current_quantity+=slicedQuantity
-            print("################################# - chicken meat Stand Id "+str(chickenStand.meat_stand_id)+"- has been added by "+str(slicedQuantity)+" #########################################\n")
+        #    print("################################# - chicken meat Stand Id "+str(chickenStand.meat_stand_id)+"- has been added by "+str(slicedQuantity)+" #########################################\n")
           else:
-            print("################################# - We've reached the max cummulated quantity, we should sell some :( #########################################\n")
+            print("################################# - We've reached the max cummulated quantity of chicken, we should sell some :( #########################################\n")
             break
         for beefStand in shawarmaStore.beef_meat_stands:
           # Checking the cummulated quantity on all beef stands
@@ -38,18 +38,23 @@ class Event:
             slicedQuantity = randomGenerator.normal(shawarmaStore.beef_mean,shawarmaStore.beef_deviation)
             if slicedQuantity<0.1:
               slicedQuantity=0.1
+            
             beefStand.storage_time+=beefStand.current_quantity*shawarmaStore.slicingPeriod           # sum of (quantity before adding the sliced portion * T)
             beefStand.current_quantity+=slicedQuantity
-            print("################################# - beef meat Stand Id "+str(beefStand.meat_stand_id)+"- has been added by "+str(slicedQuantity)+" #########################################\n")
+        #    print("################################# - beef meat Stand Id "+str(beefStand.meat_stand_id)+"- has been added by "+str(slicedQuantity)+" #########################################\n")
           else:
-            print("################################# - We've reached the max cummulated quantity, we should sell some :( #########################################\n")
+            print("################################# - We've reached the max cummulated quantity of beef, we should sell some :( #########################################\n")
             break
        
     elif(self.event_type == "customer_arrival"):
       # Customer Arrival Event Execution
         shawarmaStore.clock = self.activation_time
+        customerArrivalEvent = Event("customer_arrival", shawarmaStore.clock+randomGenerator.expo(shawarmaStore.arrival_time_mean))
+        shawarmaStore.agenda.append(customerArrivalEvent)
+      #  print("################################# - customer Arrival event has been scheduled  at "+str(shawarmaStore.clock+randomGenerator.expo(shawarmaStore.arrival_time_mean))+"- #########################################\n")
+        
         customer = Customer("cad"+str(time.localtime().tm_sec), shawarmaStore.agenda[0].activation_time)
-        print("################################# - customer cad"+str(shawarmaStore.clock)+" has been created - #########################################\n")
+     #   print("################################# - customer cad"+str(shawarmaStore.clock)+" has been created - #########################################\n")
         shawarmaStore.customer_count +=1
         p = randomGenerator.bernoulli()
         if p==0:
@@ -60,9 +65,9 @@ class Event:
     elif(self.event_type == "employee_freed"):
        # Employee Freed Event Execution
        shawarmaStore.clock = self.activation_time
-       e = next((e for e in shawarmaStore.employees if e.employee_id == self.employee_id), None)
-       e.isFree = True
-       e.freed_time = shawarmaStore.clock
+       for e in shawarmaStore.employees:
+         if e.employee_id == self.employee_id:
+            e.free_employee(shawarmaStore.clock)
        
     
     
