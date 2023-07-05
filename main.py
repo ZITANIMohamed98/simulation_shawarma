@@ -4,42 +4,42 @@ import time
 
 def main():
     
-    startTime = time.localtime().tm_min*60+time.localtime().tm_sec  # Time of starting the simulation 
+
     simulationDuration =   40          # Simulation Duration in minutes
     
-  #  print("################################# - Initializing the model - #########################################\n")
+    print("################################# - Initializing the model - #########################################\n")
     shawarmaStore = ShawarmaStore(2, 1.1, 0.5, 2, 3, 0.5**2, 1, 3, 0.8**2, 4, 5)
     randomGenerator = RandomGenerator()
     for i in range (0, shawarmaStore.number_of_chicken_stands, 1):
         chicken_meat_stand = MeatStand("cms"+str(i), True)
-     #   print("################################# - chicken stand cms"+str(i)+" has been created - #########################################\n")
+        print("################################# - chicken stand cms"+str(i)+" has been created - #########################################\n")
         shawarmaStore.chicken_meat_stands.append(chicken_meat_stand)
 
     for i in range (0, shawarmaStore.number_of_beef_stands, 1):
         beef_meat_stand = MeatStand("bms"+str(i), True)
-     #   print("################################# - beef stand bms"+str(i)+" has been created - #########################################\n")
+        print("################################# - beef stand bms"+str(i)+" has been created - #########################################\n")
         shawarmaStore.beef_meat_stands.append(beef_meat_stand) 
 
     for i in range (0, shawarmaStore.number_of_employees, 1):
         employee = Employee("emp"+str(i))
-      #  print("################################# - employee emp"+str(i)+" has been created - #########################################\n")
+        print("################################# - employee emp"+str(i)+" has been created - #########################################\n")
         shawarmaStore.employees.append(employee)
     # Event Scheduling 
     slicingEvent  = Event("slicing", shawarmaStore.clock+shawarmaStore.slicingPeriod)
     shawarmaStore.agenda.append(slicingEvent)
-  #  print("################################# - slicing event has been scheduled at "+str(slicingEvent.activation_time)+"- #########################################\n")
+    print("################################# - slicing event has been scheduled at "+str(slicingEvent.activation_time)+"- #########################################\n")
     # Event Scheduling 
     customerArrivalEvent = Event("customer_arrival", shawarmaStore.clock+randomGenerator.expo(shawarmaStore.arrival_time_mean))
     shawarmaStore.agenda.append(customerArrivalEvent)
-   # print("################################# - customer Arrival event has been scheduled  at "+str(shawarmaStore.clock+randomGenerator.expo(shawarmaStore.arrival_time_mean))+"- #########################################\n")
+    print("################################# - customer Arrival event has been scheduled  at "+str(shawarmaStore.clock+randomGenerator.expo(shawarmaStore.arrival_time_mean))+"- #########################################\n")
        
     while (shawarmaStore.clock <= simulationDuration):
         # Agenda Sorting
         shawarmaStore.agenda = sorted(shawarmaStore.agenda, key=lambda p: p.activation_time)
-        # Time Events Execution 
+        #Time Events Execution 
         if len(shawarmaStore.agenda)!=0:
             shawarmaStore.agenda[0].execute(shawarmaStore)
-           # print("################################# - "+shawarmaStore.agenda[0].event_type+" event has been executed  at "+str(shawarmaStore.clock)+"- #########################################\n")
+            print("################################# - "+shawarmaStore.agenda[0].event_type+" event has been executed  at "+str(shawarmaStore.clock)+"- #########################################\n")
             shawarmaStore.agenda.pop(0)
             # Service Start Conditional Event Implementation
             for e in shawarmaStore.employees:
@@ -74,8 +74,8 @@ def main():
                                 print("cutomer dropped ---- not enough beef meat")
                         employeeFreedEvent = Event("employee_freed", shawarmaStore.clock+shawarmaStore.wrapping_time, e.employee_id)
                         shawarmaStore.agenda.append(employeeFreedEvent)
-                     #   print("################################# - employee End of Service event has been scheduled  at "+str(shawarmaStore.clock+shawarmaStore.wrapping_time)+"- #########################################\n")
-                    # Chicken queue served
+                        print("################################# - employee End of Service event has been scheduled  at "+str(shawarmaStore.clock+shawarmaStore.wrapping_time)+"- #########################################\n")
+                    #  Chicken queue served
                     elif len(shawarmaStore.chicken_queue)!=0 and len(shawarmaStore.beef_queue)==0:
                         e.is_free = False
                         e.free_time += shawarmaStore.clock-e.freed_time
@@ -91,7 +91,7 @@ def main():
                                print("cutomer dropped ---- not enough chicken meat")
                         employeeFreedEvent = Event("employee_freed", shawarmaStore.clock +shawarmaStore.wrapping_time, e.employee_id)
                         shawarmaStore.agenda.append(employeeFreedEvent)
-                     #   print("################################# - employee End of Service event has been scheduled  at "+str(time.localtime().tm_min*60 + time.localtime().tm_sec+shawarmaStore.wrapping_time)+"- #########################################\n")
+                        print("################################# - employee End of Service event has been scheduled  at "+str(time.localtime().tm_min*60 + time.localtime().tm_sec+shawarmaStore.wrapping_time)+"- #########################################\n")
                     # Beef queue served
                     elif len(shawarmaStore.beef_queue)!=0 and len(shawarmaStore.chicken_queue)==0:
                             e.is_free = False
@@ -108,7 +108,7 @@ def main():
                                 print("cutomer dropped ---- not enough beef meat")
                             employeeFreedEvent = Event("employee_freed", shawarmaStore.clock + shawarmaStore.wrapping_time, e.employee_id)
                             shawarmaStore.agenda.append(employeeFreedEvent)
-                      #      print("################################# - employee End of Service event has been scheduled  at "+str(shawarmaStore.clock+shawarmaStore.wrapping_time)+"- #########################################\n")
+                            print("################################# - employee End of Service event has been scheduled  at "+str(shawarmaStore.clock+shawarmaStore.wrapping_time)+"- #########################################\n")
                     elif len(shawarmaStore.beef_queue)==0 and len(shawarmaStore.chicken_queue)==0:
                         print("################################# - the customer queues are still empty  #########################################\n")
                     
